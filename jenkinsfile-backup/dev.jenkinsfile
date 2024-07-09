@@ -5,7 +5,7 @@ pipeline {
         githubPush()
     }
     options {
-        timeout(time: 30, unit: 'MINUTES') // Timeout for the entire pipeline
+        timeout(time: 1, unit: 'MINUTES') // Timeout for the entire pipeline
         buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
