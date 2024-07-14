@@ -51,7 +51,11 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
+<<<<<<< HEAD
                     params.BRANCH_NAME == 's8danny'
+=======
+                    params.BRANCH_NAME == 's8danny4'
+>>>>>>> d93148f80333fb9c72ca944cef4a6bb12bea6a6a
                 }
             }
             steps {
