@@ -5,7 +5,7 @@ pipeline {
         githubPush()
     }
     options {
-        timeout(time: 1, unit: 'MINUTES') // Timeout for the entire pipeline
+        timeout(time: 30, unit: 'MINUTES') // Timeout for the entire pipeline
         buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
@@ -19,7 +19,7 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8corneille', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8danny4', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
@@ -32,7 +32,7 @@ pipeline {
                         def build_id = env.BUILD_USER_ID
                         def build_user = env.BUILD_USER
                         echo "build_id : $build_id"
-                        if (build_id in ['corneillechahoua', 'admin']) {
+                        if (build_id in ['s8danny', 'admin']) {
                             echo "Hi $build_user, You are allowed to run this job"
                         } else {
                             error "Hi $build_user, You are not allowed to run this job"
@@ -51,7 +51,7 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8danny4'
                 }
             }
             steps {
@@ -95,7 +95,7 @@ pipeline {
         stage('Building Application 01') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8danny4'
                 }
             }
             steps {
@@ -110,7 +110,7 @@ pipeline {
         stage('Building Application 02') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8danny4'
                 }
             }
             steps {
