@@ -75,6 +75,11 @@ pipeline {
             }
         }
         stage('SonarQube analysis') {
+             when {
+                expression {
+                    params.BRANCH_NAME == 's8danny4'
+                }
+             }    
             steps {
                 script {
                     dir("${WORKSPACE}") {
@@ -136,6 +141,11 @@ pipeline {
             }
         }
         stage('Pushing into Docker Hub') {
+             when {
+                expression {
+                    params.BRANCH_NAME == 's8danny4'
+                }
+            }    
             steps {
                 script {
                     sh """
