@@ -148,15 +148,10 @@ pipeline {
             }    
             steps {
                 script {
-                    sh """
-                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
-                        docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
-                        docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
-                    """
+                    pushDockerhub()
                 }
             }
-        }
-            
+        }   
         stage('Test timeout') {
             steps {
                 script {
@@ -167,11 +162,11 @@ pipeline {
     }
 }
 
-def customFunction() {
+def pushDockerhub() {
     sh """
-        ls -l
-        pwd
-        uptime
+        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${params.APP1_TAG}
+        docker push ${env.DOCKER_HUB_USERNAME}/app-02:${params.APP2_TAG}
+        docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
     """
 }
 
@@ -181,4 +176,12 @@ def sanity_check() {
        echo "The parameter BRANCH_NAME is not set"
        sh 'exit 2'
    } 
+   if (params.APP1_TAG.isEmpty()){
+       echo "The parameter APP1_TAG is not set"
+       sh 'exit 2'
+    }
+if (params.APP2_TAG.isEmpty()){
+       echo "The parameter APP2_TAG is not set"
+       sh 'exit 2'
+    }
 }
