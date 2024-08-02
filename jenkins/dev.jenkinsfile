@@ -25,7 +25,7 @@ pipeline {
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
-        stage ('Check Allow Users') {
+        stage('Check Allow Users') {
             steps {
                 script {
                     wrap([$class: 'BuildUser']) {
@@ -47,14 +47,11 @@ pipeline {
                     sanity_check()
                 }
             }
-        }stage('get in jenkins) {
+        }
+        stage('Get in Jenkins') {
             steps {
                 script {
-                   sh '''
-                   cd jenkins
-
-                   '''
-                  
+                   sh 'cd jenkins'
                 }
             }
         }
@@ -77,14 +74,14 @@ pipeline {
                 script {
                     dir("${WORKSPACE}/sonar-scanner") {
                         sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest .
                         docker images
                         """
                     }
                 }
             }
         }
-        stage('SonarQube analysis') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
                     dir("${WORKSPACE}") {
@@ -132,20 +129,18 @@ pipeline {
                 }
             }
         }
-        stage('Login into') {
+        stage('Login to Docker Hub') {
             steps {
                 script {
-                    // Login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", 
                     usernameVariable: 'DOCKER_USERNAME', 
                     passwordVariable: 'DOCKER_PASSWORD')]) {
-                        // Use Docker CLI to login
                         sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                     }
                 }
             }
         }
-        stage('Pushing into Docker Hub') {
+        stage('Pushing to Docker Hub') {
             steps {
                 script {
                     sh """
@@ -156,8 +151,7 @@ pipeline {
                 }
             }
         }
-            
-        stage('Test timeout') {
+        stage('Test Timeout') {
             steps {
                 script {
                     sleep 1
@@ -175,10 +169,9 @@ def customFunction() {
     """
 }
 
-
 def sanity_check() {
-    if (params.BRANCH_NAME.isEmpty()){
-       echo "The parameter BRANCH_NAME is not set"
-       sh 'exit 2'
-   } 
+    if (params.BRANCH_NAME.isEmpty()) {
+        echo "The parameter BRANCH_NAME is not set"
+        sh 'exit 2'
+    } 
 }
