@@ -48,13 +48,7 @@ pipeline {
                 }
             }
         }
-        stage('Get in Jenkins') {
-            steps {
-                script {
-                   sh 'cd jenkins'
-                }
-            }
-        }
+      
         stage('Clone Repository') {
             when {
                 expression {
