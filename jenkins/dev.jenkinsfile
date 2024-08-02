@@ -47,6 +47,16 @@ pipeline {
                     sanity_check()
                 }
             }
+        }stage('get in jenkins) {
+            steps {
+                script {
+                   sh '''
+                   cd jenkins
+
+                   '''
+                  
+                }
+            }
         }
         stage('Clone Repository') {
             when {
