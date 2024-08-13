@@ -95,7 +95,7 @@ pipeline {
         stage('Building Application 01') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8danny4'
+                    params.BRANCH_NAME == 's8kevinaf02'
                 }
             }
             steps {
@@ -110,7 +110,7 @@ pipeline {
         stage('Building Application 02') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8danny4'
+                    params.BRANCH_NAME == 's8kevinaf02'
                 }
             }
             steps {
