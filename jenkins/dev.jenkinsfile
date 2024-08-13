@@ -51,7 +51,7 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8danny4'
+                    params.BRANCH_NAME == 's8kevinaf02'
                 }
             }
             steps {
