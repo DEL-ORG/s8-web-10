@@ -6,7 +6,7 @@ pipeline {
     }
     options {
         //timeout(time: 30, unit: 'MINUTES') // Timeout for the entire pipeline
-        buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
+        buildDiscarder(logRotator(numToKeepStr: '4')) // Discard old builds to save disk space
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
         skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
@@ -19,7 +19,7 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8danny4', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8kevinaf02', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
