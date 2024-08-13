@@ -4,32 +4,28 @@ pipeline {
     triggers {
         githubPush()
     }
-    
     options {
-        //timeout(time: 30, unit: 'MINUTES') // Timeout for the entire pipeline
-        //buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
+        timeout(time: 30, unit: 'MINUTES') // Timeout for the entire pipeline
+        buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
         skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
-        //retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
+        retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
     }
-    
     environment {
-        DOCKER_HUB_USERNAME = "devopseasylearning"
-        ALPHA_APPLICATION_01_REPO = "alpha-application-01"
-        ALPHA_APPLICATION_02_REPO = "alpha-application-02"
+        DOCKER_HUB_USERNAME="devopseasylearning"
+        ALPHA_APPLICATION_01_REPO="alpha-application-01"
+        ALPHA_APPLICATION_02_REPO="alpha-application-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
-    
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8danny4', description: 'The branch to build from')
-        string(name: 'APP1_TAG', defaultValue: 'latest', description: 'Tag for Application 01 Docker image')
-        string(name: 'APP2_TAG', defaultValue: 'latest', description: 'Tag for Application 02 Docker image')
-        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: 'Port on Docker host')
+        string(name: 'BRANCH_NAME', defaultValue: 's8danny4', description: '')
+        string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
+        string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
+        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
-    
     stages {
-        stage('Check Allow Users') {
+        stage ('Check Allow Users') {
             steps {
                 script {
                     wrap([$class: 'BuildUser']) {
@@ -45,7 +41,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Sanity Check') {
             steps {
                 script {
@@ -53,7 +48,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Clone Repository') {
             when {
                 expression {
@@ -68,20 +62,18 @@ pipeline {
                 }
             }
         }
-        
         stage('Building Sonar Image') {
             steps {
                 script {
                     dir("${WORKSPACE}/sonar-scanner") {
                         sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
                         docker images
                         """
                     }
                 }
             }
         }
-        
         stage('SonarQube analysis') {
             steps {
                 script {
@@ -89,7 +81,7 @@ pipeline {
                         docker.image("devopseasylearning/s8-sonar-scanner:latest").inside('-u 0:0') {
                             withSonarQubeEnv('SonarScanner') {
                                 sh """
-                                    ls -l
+                                    ls -l 
                                     pwd
                                     sonar-scanner -v
                                     sonar-scanner
@@ -100,7 +92,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Building Application 01') {
             when {
                 expression {
@@ -116,7 +107,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Building Application 02') {
             when {
                 expression {
@@ -132,20 +122,20 @@ pipeline {
                 }
             }
         }
-        
-        stage('Login to Docker Hub') {
+        stage('Login into') {
             steps {
                 script {
+                    // Login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", 
                     usernameVariable: 'DOCKER_USERNAME', 
                     passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Use Docker CLI to login
                         sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                     }
                 }
             }
         }
-        
-        stage('Push to Docker Hub') {
+        stage('Pushing into Docker Hub') {
             steps {
                 script {
                     sh """
@@ -156,7 +146,7 @@ pipeline {
                 }
             }
         }
-        
+            
         stage('Test timeout') {
             steps {
                 script {
@@ -167,9 +157,18 @@ pipeline {
     }
 }
 
+def customFunction() {
+    sh """
+        ls -l
+        pwd
+        uptime
+    """
+}
+
+
 def sanity_check() {
-    if (params.BRANCH_NAME.isEmpty()) {
-        echo "The parameter BRANCH_NAME is not set"
-        error 'Exiting due to missing BRANCH_NAME parameter'
-    }
+    if (params.BRANCH_NAME.isEmpty()){
+       echo "The parameter BRANCH_NAME is not set"
+       sh 'exit 2'
+   } 
 }
