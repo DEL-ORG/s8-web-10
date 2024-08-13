@@ -25,22 +25,22 @@ pipeline {
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
-        stage ('Check Allow Users') {
-            steps {
-                script {
-                    wrap([$class: 'BuildUser']) {
-                        def build_id = env.BUILD_USER_ID
-                        def build_user = env.BUILD_USER
-                        echo "build_id : $build_id"
-                        if (build_id in ['s8danny', 'admin']) {
-                            echo "Hi $build_user, You are allowed to run this job"
-                        } else {
-                            error "Hi $build_user, You are not allowed to run this job"
-                        }
-                    }
-                }
-            }
-        }
+        // stage ('Check Allow Users') {
+        //     steps {
+        //         script {
+        //             wrap([$class: 'BuildUser']) {
+        //                 def build_id = env.BUILD_USER_ID
+        //                 def build_user = env.BUILD_USER
+        //                 echo "build_id : $build_id"
+        //                 if (build_id in ['s8danny', 'admin']) {
+        //                     echo "Hi $build_user, You are allowed to run this job"
+        //                 } else {
+        //                     error "Hi $build_user, You are not allowed to run this job"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Sanity Check') {
             steps {
                 script {
