@@ -36,7 +36,7 @@ pipeline {
                         def build_id = env.BUILD_USER_ID
                         def build_user = env.BUILD_USER
                         echo "build_id : $build_id"
-                        if (build_id in ['s8kevinaf02', 'admin']) {
+                        if (build_id in ['kevin.kipkoech.ug', 'admin']) {
                             echo "Hi $build_user, You are allowed to run this job"
                         } else {
                             error "Hi $build_user, You are not allowed to run this job"
