@@ -74,24 +74,24 @@ pipeline {
                 }
             }
         }
-        // stage('SonarQube analysis') {
-        //     steps {
-        //         script {
-        //             dir("${WORKSPACE}") {
-        //                 docker.image("devopseasylearning/s8-sonar-scanner:latest").inside('-u 0:0') {
-        //                     withSonarQubeEnv('SonarScanner') {
-        //                         sh """
-        //                             ls -l 
-        //                             pwd
-        //                             sonar-scanner -v
-        //                             sonar-scanner
-        //                         """
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('SonarQube analysis') {
+            steps {
+                script {
+                    dir("${WORKSPACE}") {
+                        docker.image("devopseasylearning/s8-sonar-scanner:latest").inside('-u 0:0') {
+                            withSonarQubeEnv('SonarScanner') {
+                                sh """
+                                    ls -l 
+                                    pwd
+                                    sonar-scanner -v
+                                    sonar-scanner
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
         stage('Building Application 01') {
             when {
                 expression {
