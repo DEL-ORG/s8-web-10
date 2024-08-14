@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent SERVER03
     
     triggers {
         githubPush()
