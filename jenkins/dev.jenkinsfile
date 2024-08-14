@@ -18,7 +18,7 @@ pipeline {
         ALPHA_APPLICATION_01_REPO = "alpha-application-01"
         ALPHA_APPLICATION_02_REPO = "alpha-application-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
-        DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
+    
     }
     
     parameters {
