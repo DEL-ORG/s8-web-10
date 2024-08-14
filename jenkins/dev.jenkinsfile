@@ -116,4 +116,43 @@ pipeline {
         }
         
         stage('Login to Docker Hub') {
-            s
+            steps {
+                script {
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", 
+                    usernameVariable: 'DOCKER_USERNAME', 
+                    passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Use Docker CLI to login
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    }
+                }
+            }
+        }
+        
+        stage('Push Images to Docker Hub') {
+            steps {
+                script {
+                    sh """
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
+                        docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
+                    """
+                }
+            }
+        }
+        
+        stage('Test Timeout') {
+            steps {
+                script {
+                    sleep 1 // This stage is for testing purposes; adjust as needed
+                }
+            }
+        }
+    }
+}
+
+def sanity_check() {
+    if (params.BRANCH_NAME.isEmpty()) {
+        error "The parameter BRANCH_NAME is not set"
+    }
+}
