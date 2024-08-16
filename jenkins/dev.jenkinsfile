@@ -10,7 +10,7 @@ pipeline {
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
         skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
-        // retry(3) // Uncomment if you want to retry the entire pipeline up to 3 times if it fails
+        
     }
     
     environment {
