@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         string(name: 'IMAGE_NAME', defaultValue: 'kenn_im', description: 'Insert image name')
-        string(name: 'CONTAINER_NAME', defaultValue: 'kenn_cont', description: 'Insert container name') 
+        string(name: 'CONTAINER_NAME', defaultValue: 'kenn_cont', description: 'Insert container name')
         string(name: 'PORT', defaultValue: '2024', description: 'Port to expose')
     }
 
@@ -42,6 +42,11 @@ pipeline {
         stage('Deploy the application') {
             steps {
                 script {
+                    // Ensure no existing container is running with the same name
+                    sh """
+                        docker stop ${params.CONTAINER_NAME} || true
+                        docker rm ${params.CONTAINER_NAME} || true
+                    """
                     // Deploy the container with port mapping
                     sh """
                         docker run -d -p ${params.PORT}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}:latest
