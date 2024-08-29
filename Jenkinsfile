@@ -1,29 +1,18 @@
 pipeline {
     agent any
-    parameters {
-        string name: 'IMAGE_NAME', defaultValue: ' ', description: 'insert image name'
-        string name: 'CONTAINER_NAME', defaultValue: ' ', description: 'insert container name' 
-        string name: 'PORT', defaultValue: ' ', description: 'port' 
-        // name: 'IMAGE_NAME', string defaultValue: ' ', description: ' insert image name'  
-        }
 
+    parameters {
+        string(name: 'IMAGE_NAME', defaultValue: 'kenn_im', description: 'Insert image name')
+        string(name: 'CONTAINER_NAME', defaultValue: 'kenn_cont', description: 'Insert container name') 
+        string(name: 'PORT', defaultValue: '2024', description: 'Port to expose')
+    }
 
     stages {
-        // stage('Clone the repository') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 git clone git@github.com:DEL-ORG/s8-web-2.git
-        //             """
-        //         }
-        //     }
-        // }
-
         stage('Building the image') {
             steps {
                 script {
                     sh """
-                        docker build -t ${params.IMAGE_NAME}:latest . || true
+                        docker build -t ${params.IMAGE_NAME}:latest .
                         docker images
                     """
                 }
@@ -33,21 +22,44 @@ pipeline {
         stage('Running the container to see its contents') {
             steps {
                 script {
+                    // Stop and remove any existing container with the same name
                     sh """
-                        docker run -d --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}:latest || true
+                        docker stop ${params.CONTAINER_NAME} || true
+                        docker rm ${params.CONTAINER_NAME} || true
+                    """
+                    // Run the container
+                    sh """
+                        docker run -d --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}:latest
+                    """
+                    // List contents of the application directory in the running container
+                    sh """
+                        docker exec ${params.CONTAINER_NAME} ls /var/www/html
                     """
                 }
             }
         }
 
-        stage('deploy the application') {
+        stage('Deploy the application') {
             steps {
                 script {
+                    // Deploy the container with port mapping
                     sh """
-                        docker run -d -p ${PORT}:80 ${params.CONTAINER_NAME}
+                        docker run -d -p ${params.PORT}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}:latest
                     """
                 }
             }
         }
-    }  
+    }
+
+    post {
+        always {
+            script {
+                // Cleanup containers
+                sh """
+                    docker stop ${params.CONTAINER_NAME} || true
+                    docker rm ${params.CONTAINER_NAME} || true
+                """
+            }
+        }
+    }
 }
