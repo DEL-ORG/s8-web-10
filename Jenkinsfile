@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker run -d --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME} || true
+                        docker run -d --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}:latest || true
                     """
                 }
             }
