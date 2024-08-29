@@ -56,15 +56,18 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                // Cleanup containers
-                sh """
-                    docker stop ${params.CONTAINER_NAME} || true
-                    docker rm ${params.CONTAINER_NAME} || true
-                """
-            }
-        }
-    }
+    // post {
+    //     always {
+    //         script {
+    //             // Cleanup containers
+    //             sh """
+    //                 docker stop ${params.CONTAINER_NAME} || true
+    //                 docker rm ${params.CONTAINER_NAME} || true
+    //             """
+    //         }
+    //     }
+    // }
 }
+
+
+
