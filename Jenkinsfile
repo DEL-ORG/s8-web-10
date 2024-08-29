@@ -1,49 +1,54 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8giress', description: '')
-        string(name: 'IMAGE_NAME', defaultValue: '', description: '')
-        string(name: 'CONTAINER_NAME', defaultValue: '', description: '')
-        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
-    }
+        name: 'IMAGE_NAME', string defaultValue: ' ', description: ' insert image name'
+        name: 'CONTAINER_NAME', string defaultValue: ' ', description: ' insert container name' 
+        name: 'PORT', string defaultValue: ' ', description: ' port' 
+        // name: 'IMAGE_NAME', string defaultValue: ' ', description: ' insert image name'  
+        }
+
+
     stages {
-        stage('Clone Repository') {
-            steps {
-                script {
-                    git credentialsId: 'jenkins-ssh-agents-private-key',
-                        url: 'git@github.com:DEL-ORG/s8-web-2.git',
-                        branch: "${params.BRANCH_NAME}"
-                }
-            }
-        }
-        stage('Checking the code') {
+        stage('Clone the repository') {
             steps {
                 script {
                     sh """
-                        ls -l
-                    """ 
+                        git clone git@github.com:DEL-ORG/s8-web-2.git
+                    """
                 }
             }
         }
-        stage('Building the dockerfile') {
+
+        stage('Building the image') {
             steps {
                 script {
                     sh """
-                        docker build -t ${params.IMAGE_NAME} .
-                        docker images |grep ${params.IMAGE_NAME}
-                    """ 
+                        docker build -t ${params.IMAGE_NAME}:latest .
+                        docker images
+                    """
                 }
             }
         }
-        stage('Deploying the application') {
+
+        stage('Running the container to see its contents') {
             steps {
                 script {
                     sh """
-                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
-                        docker ps |grep ${params.CONTAINER_NAME}
-                    """ 
+                        docker run -it --name ${CONTAINER_NAME} ${params.IMAGE_NAME} bash
+                        ls
+                    """
                 }
             }
         }
-    }
+
+        stage('deploy the application') {
+            steps {
+                script {
+                    sh """
+                        docker run -d -p ${PORT}:80 ${CONTAINER_NAME}
+                    """
+                }
+            }
+        }
+    }  
 }
