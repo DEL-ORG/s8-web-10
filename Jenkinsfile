@@ -9,15 +9,15 @@ pipeline {
 
 
     stages {
-        stage('Clone the repository') {
-            steps {
-                script {
-                    sh """
-                        git clone git@github.com:DEL-ORG/s8-web-2.git
-                    """
-                }
-            }
-        }
+        // stage('Clone the repository') {
+        //     steps {
+        //         script {
+        //             sh """
+        //                 git clone git@github.com:DEL-ORG/s8-web-2.git
+        //             """
+        //         }
+        //     }
+        // }
 
         stage('Building the image') {
             steps {
