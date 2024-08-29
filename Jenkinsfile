@@ -35,7 +35,6 @@ pipeline {
                 script {
                     sh """
                         docker run -d --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME} || true
-                        docker exec ${params.CONTAINER_NAME} ls /var/www/html
                     """
                 }
             }
