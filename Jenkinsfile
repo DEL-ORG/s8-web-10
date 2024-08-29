@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${params.IMAGE_NAME}:latest .
+                        docker build -t ${params.IMAGE_NAME}:latest . || true
                         docker images
                     """
                 }
@@ -34,8 +34,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker run -it --name ${CONTAINER_NAME} ${params.IMAGE_NAME} bash
-                        ls
+                        docker run -d --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME} || true
+                        docker exec ${params.CONTAINER_NAME} ls /var/www/html
                     """
                 }
             }
