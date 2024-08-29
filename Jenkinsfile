@@ -1,9 +1,9 @@
 pipeline {
     agent any
     parameters {
-        name: 'IMAGE_NAME', string defaultValue: ' ', description: ' insert image name'
-        name: 'CONTAINER_NAME', string defaultValue: ' ', description: ' insert container name' 
-        name: 'PORT', string defaultValue: ' ', description: ' port' 
+        string name: 'IMAGE_NAME', defaultValue: ' ', description: 'insert image name'
+        string name: 'CONTAINER_NAME', defaultValue: ' ', description: 'insert container name' 
+        string name: 'PORT', defaultValue: ' ', description: 'port' 
         // name: 'IMAGE_NAME', string defaultValue: ' ', description: ' insert image name'  
         }
 
