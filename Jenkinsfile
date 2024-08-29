@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker run -d -p ${PORT}:80 ${CONTAINER_NAME}
+                        docker run -d -p ${PORT}:80 ${params.CONTAINER_NAME}
                     """
                 }
             }
